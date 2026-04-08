@@ -10,7 +10,7 @@
 // To get you started we've included code to prevent your Battlesnake from moving backwards.
 // For more info see docs.battlesnake.com
 import express from "express";
-import move from "./moveLogic.js";
+import {move, gameCons, games} from "./moveLogic.js";
 
 const app = express();
 app.use(express.json());
@@ -18,7 +18,7 @@ const config = {
 	apiversion: "1",
 	author: "evk-1", // TODO: Your Battlesnake Username
 	color: "#4A412A", // TODO: Choose color
-	head: "all-seeing", // TODO: Choose head, see https://play.battlesnake.com/customizations/ for options unlocked in your account
+	head: "mlh-gene", // TODO: Choose head, see https://play.battlesnake.com/customizations/ for options unlocked in your account
 	tail: "do-sammy", // TODO: Choose tail, see https://play.battlesnake.com/customizations/ for options unlocked in your account
 };
 
@@ -29,7 +29,11 @@ app.get('/', (req, res) => {
 //TODO: respond to POST requests on "/start". Your response itself is ignored, but must have status code "200"
 //      the request body will contain objects representing the game instance, game board state, and your snake
 //      https://docs.battlesnake.com/api/requests/start
-
+app.post('/start', (req, res) => {
+	let newGame = new gameCons(req.body.game)
+	games[req.body.you.id] = newGame
+	res.status(200).send()
+})
 //TODO: respond to POST requests on "/move". Your response should be an object with a "move" property and optionally
 //      a "shout" property. The request body again contains objects representing the game state
 //      https://docs.battlesnake.com/api/requests/move
@@ -39,7 +43,9 @@ app.post('/move', (req, res) => {
 //TODO: respond to POST requests on "/end", which signals the end of a game. Your response itself is ignored,
 //      but must have status code "200" the request body will contain objects representing the game
 //      https://docs.battlesnake.com/api/requests/end
-
+app.post('/end', (req, res) => {
+	games[req.body.you.id] = undefined
+})
 const host = "0.0.0.0";
 const port = process.env.PORT || 8000;
 

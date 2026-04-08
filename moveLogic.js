@@ -1,4 +1,11 @@
-export default function move(gameState){
+export function gameCons(gamestate){
+    this.gameId = gamestate.id
+    this.target = {x:0,y:0}
+}
+
+export const games = {}
+
+export function move(gameState){
     let moveSafety = {
         up: true,
         down: true,
@@ -7,9 +14,38 @@ export default function move(gameState){
     };
     
     // We've included code to prevent your Battlesnake from moving backwards
+    let game = games[gameState.you.id]
+    console.log(game)
     const myHead = gameState.you.body[0];
     const myNeck = gameState.you.body[1];
-    
+
+    if (gameState.turn == 0){
+        if (myHead.x <= Math.ceil((gameState.board.width - 1) / 2)) {
+            game.target.x = 0
+        }else{
+            game.target.x = gameState.board.width - 1
+        }
+        if (myHead.y <= Math.ceil((gameState.board.height - 1) / 2)) {
+            game.target.y = 0
+        }else{
+            game.target.y = gameState.board.height - 1
+        }
+    }
+
+    if (myHead.x == 0 || myHead.x == gameState.board.width - 1){
+        if (myHead.y == 0 || myHead.y == gameState.board.height - 1) {
+            if (game.target.x == 0 && game.target.y == 0){
+                game.target.y = gameState.board.height - 1
+            }else if (game.target.x == 0 && game.target.y == gameState.board.height - 1){
+                game.target.x = gameState.board.width - 1
+            }else if (game.target.x == gameState.board.width - 1 && game.target.y == gameState.board.height - 1){
+                game.target.y = 0
+            }else if (game.target.x == gameState.board.width - 1 && game.target.y == 0){
+                game.target.x = 0
+            }
+        }
+    }
+  
     if (myNeck.x < myHead.x) {
         console.log(`My neck is left`)        // Neck is left of head, don't move left
         moveSafety.left = false;
@@ -103,9 +139,9 @@ export default function move(gameState){
     
     let nextMove = safeMoves[Math.floor(Math.random() * safeMoves.length)];
 
-    if(gameState.you.health < 80 && safeMoves.length > 1){
-        let food = gameState.board.food[0];
-        let xdif = food.x - myHead.x
+    if(safeMoves.length > 1 && gameState.you.health < 75){
+        let foodf = gameState.board.food[0];
+        let xdif = foodf.x - myHead.x
         let xdir;
         if (xdif > 0){
             xdir = 'right'
@@ -115,11 +151,46 @@ export default function move(gameState){
         }else{
             xdir = 'none'
         }
-        let ydif = food.y - myHead.y
+        let ydif = foodf.y - myHead.y
         let ydir;
         if (ydif > 0){
             ydir = 'up'
+        }else if (ydif < 0){
+            ydir = 'down'
+            ydif *= -1
+        }else{
+            ydir = 'none'
+        }
+        let dir1;
+        let dir2;
+        if (xdif > ydif){
+            dir1 = xdir
+            dir2 = ydir
+        }else{
+            dir1 = ydir
+            dir2 = xdir
+        }
+        if (safeMoves.indexOf(dir1) != -1){
+            nextMove = dir1
+        }else if (safeMoves.indexOf(dir2) != -1){
+            nextMove = dir2
+        }
+    }else if (safeMoves.length > 1){
+        let xdif = game.target.x - myHead.x
+        let xdir;
+        if (xdif > 0){
+            xdir = 'right'
         }else if (xdif < 0){
+            xdir = 'left'
+            xdif *= -1
+        }else{
+            xdir = 'none'
+        }
+        let ydif = game.target.y - myHead.y
+        let ydir;
+        if (ydif > 0){
+            ydir = 'up'
+        }else if (ydif < 0){
             ydir = 'down'
             ydif *= -1
         }else{
