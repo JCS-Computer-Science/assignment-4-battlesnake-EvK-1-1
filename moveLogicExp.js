@@ -75,8 +75,54 @@ export function move(gameState){
     console.warn('---checking enemies---')
     for (let i = 0; i < gameState.board.snakes.length; i++) {
         let enemy = gameState.board.snakes[i].body
-        console.log(`--${gameState.board.snakes[i].name}--`)
-        if (enemy[0].x != Head.x && enemy[0].y != Head.y){
+        if (enemy[0].x != Head.x || enemy[0].y != Head.y){
+            console.log(`--${gameState.board.snakes[i].name}--`)
+            if (Math.abs(Head.x - enemy[0].x) + Math.abs(Head.y - enemy[0].y) == 2) {
+                console.log('-heads could collide-')
+                let xdif = Head.x - enemy[0].x
+                let ydif = Head.y - enemy[0].y
+                if(Body.length > enemy.length){
+                    console.log('attacking')
+                    if (Math.abs(xdif) == 2){
+                        moves['up'] -= 10
+                        moves['down'] -= 10
+                    }else if (Math.abs(ydif) == 2){
+                        moves['left'] -= 10
+                        moves['right'] -= 10
+                    }else{
+                        if (xdif > 0){
+                            moves['right'] -= 10
+                        }else{
+                            moves['left'] -= 10
+                        }
+                        if (ydif > 0){
+                            moves['up'] -= 10
+                        }else{
+                            moves['down'] -= 10
+                        }
+                    }
+                }else{
+                    console.log('Retreating')
+                    if (Math.abs(xdif) == 2){
+                        moves['up'] += 10
+                        moves['down'] += 10
+                    }else if (Math.abs(ydif) == 2){
+                        moves['left'] += 10
+                        moves['right'] += 10
+                    }else{
+                        if (xdif > 0){
+                            moves['right'] += 10
+                        }else{
+                            moves['left'] += 10
+                        }
+                        if (ydif > 0){
+                            moves['up'] += 10
+                        }else{
+                            moves['down'] += 10
+                        }
+                    }
+                }
+            }
             for (let j = 0; j < enemy.length - 1; j++){
                 if (Head.x - 1 == enemy[j].x && Head.y == enemy[j].y){
                     moves['left'] = -999
@@ -92,6 +138,8 @@ export function move(gameState){
                     console.log('up')
                 }
             }
+        }else{
+            console.log('--me--')
         }
     }
 
@@ -143,8 +191,6 @@ export function move(gameState){
             }
         }
     }
-
-
 
     console.log('---calculating move---')
     console.log(moves)
