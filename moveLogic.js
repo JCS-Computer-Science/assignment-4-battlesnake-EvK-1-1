@@ -19,6 +19,10 @@ export function move(gameState){
     const myHead = gameState.you.body[0];
     const myNeck = gameState.you.body[1];
 
+    if (game == undefined){
+        game = new gameCons(gameState.game)
+    }
+    
     if (gameState.turn == 0){
         if (myHead.x <= Math.ceil((gameState.board.width - 1) / 2)) {
             game.target.x = 0
