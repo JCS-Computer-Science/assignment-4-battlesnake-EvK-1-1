@@ -20,7 +20,6 @@ export function move(gameState){
     const RightEdge = gameState.board.width - 1
 
     console.log(Head)
-    console.log(Body)
 
     console.warn('---checking for edge---')
     if (Head.x == 0){
@@ -76,6 +75,7 @@ export function move(gameState){
     console.warn('---checking enemies---')
     for (let i = 0; i < gameState.board.snakes.length; i++) {
         let enemy = gameState.board.snakes[i].body
+        console.log(`--${gameState.board.snakes[i].name}--`)
         if (enemy[0].x != Head.x && enemy[0].y != Head.y){
             for (let j = 0; j < enemy.length - 1; j++){
                 if (Head.x - 1 == enemy[j].x && Head.y == enemy[j].y){
@@ -114,14 +114,32 @@ export function move(gameState){
         if (distx != 0 && Math.abs(distx) < Math.abs(disty) || disty == 0) {
             if (distx > 0){
                 moves['left'] += 2
+                console.log('Left is best')
             }else{
                 moves['right'] += 2
+                console.log('Right is best')
+            }
+            if (disty > 0){
+                moves['down'] += 1
+                console.log('Down is second')
+            }else if (disty < 0){
+                moves['up'] += 1
+                console.log('Up is second')
             }
         }else if (disty != 0 && Math.abs(distx) > Math.abs(disty) || distx == 0) {
             if (disty > 0){
                 moves['down'] += 2
+                console.log('Down is best')
             }else{
                 moves['up'] += 2
+                console.log('Up is best')
+            }
+            if (distx > 0){
+                moves['left'] += 1
+                console.log('Left is second')
+            }else if (distx < 0){
+                moves['right'] += 1
+                console.log('Right is second')
             }
         }
     }
