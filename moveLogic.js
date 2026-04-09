@@ -21,8 +21,9 @@ export function move(gameState){
 
     if (game == undefined){
         game = new gameCons(gameState.game)
+        games[gameState.you.id] = game
     }
-    
+
     if (gameState.turn == 0){
         if (myHead.x <= Math.ceil((gameState.board.width - 1) / 2)) {
             game.target.x = 0
