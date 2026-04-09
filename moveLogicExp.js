@@ -1,6 +1,6 @@
 export function gameCons(gamestate){
     this.gameId = gamestate.id
-    this.target = {x:0,y:0}
+    this.spin = true
 }
 
 export const games = {}
@@ -12,13 +12,15 @@ export function move(gameState){
         'up' : 0,
         'down' : 0
     }
-
     let game = games[gameState.you.id]
     
     const Body = gameState.you.body
     const Head = Body[0]
     const TopEdge = gameState.board.height - 1
     const RightEdge = gameState.board.width - 1
+
+    console.log(Head)
+    console.log(Body)
 
     console.warn('---checking for edge---')
     if (Head.x == 0){
@@ -93,16 +95,52 @@ export function move(gameState){
         }
     }
 
+    console.warn('---finding food---')
+    if (gameState.you.health <= 100){
+        let closest = {x:0,y:0}
+        let dist = 40
+        let distx = 0
+        let disty = 0
+        gameState.board.food.forEach(el => {
+            if(Math.abs(Head.x - el.x) + Math.abs(Head.y - el.y) < dist){
+                dist = Math.abs(Head.x - el.x) + Math.abs(Head.y - el.y)
+                distx = Head.x - el.x
+                disty = Head.y - el.y
+                closest = {...el}
+                console.log(closest)
+            }
+        })
+        console.log(`found food ${closest.x} ${closest.y}`)
+        if (distx != 0 && Math.abs(distx) < Math.abs(disty) || disty == 0) {
+            if (distx > 0){
+                moves['left'] += 2
+            }else{
+                moves['right'] += 2
+            }
+        }else if (disty != 0 && Math.abs(distx) > Math.abs(disty) || distx == 0) {
+            if (disty > 0){
+                moves['down'] += 2
+            }else{
+                moves['up'] += 2
+            }
+        }
+    }
+
+
+
     console.log('---calculating move---')
-    const Pos = Object.keys(moves).filter(direct => moves[direct] > -999)
+    console.log(moves)
+    let Pos = Object.keys(moves).filter(direct => moves[direct] > -999)
     let plan = 0
     if (Pos.length > 0){
         while (Pos.length > 1) {
-            if (moves[plan] > moves[plan + 1]) {
+            if (moves[Pos[plan]] > moves[Pos[plan + 1]]) {
+                console.log(`${Pos[plan]} is better than ${Pos[plan + 1]}`)
                 Pos.splice(plan + 1, 1)
-            }else if (moves[plan] < moves[plan + 1]) {
+            }else if (moves[Pos[plan]] < moves[Pos[plan + 1]]) {
+                console.log(`${Pos[plan + 1]} is better than ${Pos[plan]}`)
                 Pos.shift()
-            }else if (moves[plan] == moves[plan + 1]){
+            }else if (moves[Pos[plan]] == moves[Pos[plan + 1]]){
                 let rand = Math.floor(Math.random() * 2)
                 console.log(`--two even weights, chose random ${rand}--`)
                 if (rand == 1){
@@ -110,6 +148,9 @@ export function move(gameState){
                 }else{
                     Pos.splice(plan + 1, 1)
                 }
+            }else{
+                console.log('error')
+                break
             }
         }
         console.log(`MOVE ${gameState.turn}: ${Pos[0]}`)

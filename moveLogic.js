@@ -144,7 +144,7 @@ export function move(gameState){
     
     let nextMove = safeMoves[Math.floor(Math.random() * safeMoves.length)];
 
-    if(safeMoves.length > 1 && gameState.you.health < 75){
+    if(safeMoves.length > 1 && gameState.you.health < 100){
         let foodf = gameState.board.food[0];
         let xdif = foodf.x - myHead.x
         let xdir;

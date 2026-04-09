@@ -10,7 +10,7 @@
 // To get you started we've included code to prevent your Battlesnake from moving backwards.
 // For more info see docs.battlesnake.com
 import express from "express";
-import {move, gameCons, games} from "./moveLogic.js";
+import {move, gameCons, games} from "./moveLogicExp.js";
 
 const app = express();
 app.use(express.json());
@@ -24,6 +24,7 @@ const config = {
 
 //TODO: respond to GET requests on "/" with the config object above
 app.get('/', (req, res) => {
+	// console.log('pong')
 	res.send(config)
 })
 //TODO: respond to POST requests on "/start". Your response itself is ignored, but must have status code "200"
