@@ -46,6 +46,9 @@ app.post('/move', (req, res) => {
 //      https://docs.battlesnake.com/api/requests/end
 app.post('/end', (req, res) => {
 	games[req.body.you.id] = undefined
+	console.log(req.body.game.id)
+	console.log(new Date())
+	res.status(200).send()
 })
 const host = "0.0.0.0";
 const port = process.env.PORT || 8000;
