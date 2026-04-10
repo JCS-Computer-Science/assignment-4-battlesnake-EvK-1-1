@@ -84,41 +84,41 @@ export function move(gameState){
                 if(Body.length > enemy.length){
                     console.log('attacking')
                     if (Math.abs(xdif) == 2){
-                        moves['up'] -= 10
-                        moves['down'] -= 10
+                        moves['up'] -= 5
+                        moves['down'] -= 5
                     }else if (Math.abs(ydif) == 2){
-                        moves['left'] -= 10
-                        moves['right'] -= 10
+                        moves['left'] -= 5
+                        moves['right'] -= 5
                     }else{
                         if (xdif > 0){
-                            moves['right'] -= 10
+                            moves['right'] -= 5
                         }else{
-                            moves['left'] -= 10
+                            moves['left'] -= 5
                         }
                         if (ydif > 0){
-                            moves['up'] -= 10
+                            moves['up'] -= 5
                         }else{
-                            moves['down'] -= 10
+                            moves['down'] -= 5
                         }
                     }
                 }else{
                     console.log('Retreating')
                     if (Math.abs(xdif) == 2){
-                        moves['up'] += 10
-                        moves['down'] += 10
+                        moves['up'] += 5
+                        moves['down'] += 5
                     }else if (Math.abs(ydif) == 2){
-                        moves['left'] += 10
-                        moves['right'] += 10
+                        moves['left'] += 5
+                        moves['right'] += 5
                     }else{
                         if (xdif > 0){
-                            moves['right'] += 10
+                            moves['right'] += 5
                         }else{
-                            moves['left'] += 10
+                            moves['left'] += 5
                         }
                         if (ydif > 0){
-                            moves['up'] += 10
+                            moves['up'] += 5
                         }else{
-                            moves['down'] += 10
+                            moves['down'] += 5
                         }
                     }
                 }
