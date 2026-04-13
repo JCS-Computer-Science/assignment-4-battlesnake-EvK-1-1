@@ -1,3 +1,5 @@
+import flood from "./fill.js"
+
 export function gameCons(gamestate){
     this.gameId = gamestate.id
     this.spin = true
@@ -13,11 +15,16 @@ export function move(gameState){
         'down' : 0
     }
     let game = games[gameState.you.id]
+    let occupied = {}
     
     const Body = gameState.you.body
     const Head = Body[0]
     const TopEdge = gameState.board.height - 1
     const RightEdge = gameState.board.width - 1
+    for (let i = 0; i <= RightEdge; i++){
+        occupied[i] = [];
+    }
+    occupied[Head.x].push(Head.y)
 
     console.log(Head)
 
@@ -39,6 +46,7 @@ export function move(gameState){
 
     console.warn('---checking self---')
     for (let i = 1; i < gameState.you.body.length - 1; i++) {
+        occupied[Body[i].x].push(Body[i].y)
         if (i == 1){
             console.log('--neck--')
             if (Head.x > Body[i].x){
@@ -77,6 +85,7 @@ export function move(gameState){
         let enemy = gameState.board.snakes[i].body
         if (enemy[0].x != Head.x || enemy[0].y != Head.y){
             console.log(`--${gameState.board.snakes[i].name}--`)
+            occupied[enemy[i].x].push(enemy[i].y)
             if (Math.abs(Head.x - enemy[0].x) + Math.abs(Head.y - enemy[0].y) == 2) {
                 console.log('-heads could collide-')
                 let xdif = Head.x - enemy[0].x
@@ -191,6 +200,32 @@ export function move(gameState){
             }
         }
     }
+    if(gameState.you.health > 20){
+        console.log('--flood--')
+        let flofil = flood(gameState, occupied)
+        console.log(flofil)
+        if (flofil[0] == 1){
+            moves['up'] -= 100;
+        }else{
+            moves['up'] += flofil[0]
+        }
+        if (flofil[1] == 1){
+            moves['down'] -= 100;
+        }else{
+            moves['down'] += flofil[0]
+        }
+        if (flofil[2] == 1){
+            moves['left'] -= 100;
+        }else{
+            moves['left'] += flofil[0]
+        }
+        if (flofil[3] == 1){
+            moves['right'] -= 100;
+        }else{
+            moves['right'] += flofil[0]
+        }
+    }
+
 
     console.log('---calculating move---')
     console.log(moves)
