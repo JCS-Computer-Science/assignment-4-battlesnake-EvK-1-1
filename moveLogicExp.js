@@ -21,6 +21,7 @@ export function move(gameState){
     const Head = Body[0]
     const TopEdge = gameState.board.height - 1
     const RightEdge = gameState.board.width - 1
+    let Biggest = true;
     for (let i = 0; i <= RightEdge; i++){
         occupied[i] = [];
     }
@@ -85,31 +86,33 @@ export function move(gameState){
         let enemy = gameState.board.snakes[i].body
         if (enemy[0].x != Head.x || enemy[0].y != Head.y){
             console.log(`--${gameState.board.snakes[i].name}--`)
-            occupied[enemy[i].x].push(enemy[i].y)
+            if(enemy.length >= Body.length){
+                Biggest = false;
+            }
             if (Math.abs(Head.x - enemy[0].x) + Math.abs(Head.y - enemy[0].y) == 2) {
                 console.log('-heads could collide-')
                 let xdif = Head.x - enemy[0].x
                 let ydif = Head.y - enemy[0].y
                 if(Body.length > enemy.length){
                     console.log('attacking')
-                    if (Math.abs(xdif) == 2){
-                        moves['up'] -= 5
-                        moves['down'] -= 5
-                    }else if (Math.abs(ydif) == 2){
-                        moves['left'] -= 5
-                        moves['right'] -= 5
-                    }else{
+                    // if (Math.abs(xdif) == 2){
+                    //     moves['up'] -= 5
+                    //     moves['down'] -= 5
+                    // }else if (Math.abs(ydif) == 2){
+                    //     moves['left'] -= 5
+                    //     moves['right'] -= 5
+                    // }else{
                         if (xdif > 0){
-                            moves['right'] -= 5
+                            moves['left'] += 5
                         }else{
-                            moves['left'] -= 5
+                            moves['right'] += 5
                         }
                         if (ydif > 0){
-                            moves['up'] -= 5
+                            moves['down'] += 5
                         }else{
-                            moves['down'] -= 5
+                            moves['up'] += 5
                         }
-                    }
+                    // }
                 }else{
                     console.log('Retreating')
                     if (Math.abs(xdif) == 2){
@@ -118,21 +121,21 @@ export function move(gameState){
                     }else if (Math.abs(ydif) == 2){
                         moves['left'] += 5
                         moves['right'] += 5
+                    }
+                    if (xdif > 0){
+                        moves['right'] += 5
                     }else{
-                        if (xdif > 0){
-                            moves['right'] += 5
-                        }else{
-                            moves['left'] += 5
-                        }
-                        if (ydif > 0){
-                            moves['up'] += 5
-                        }else{
-                            moves['down'] += 5
-                        }
+                        moves['left'] += 5
+                    }
+                    if (ydif > 0){
+                        moves['up'] += 5
+                    }else{
+                        moves['down'] += 5
                     }
                 }
             }
             for (let j = 0; j < enemy.length - 1; j++){
+                occupied[enemy[j].x].push(enemy[j].y)
                 if (Head.x - 1 == enemy[j].x && Head.y == enemy[j].y){
                     moves['left'] = -999
                     console.log('left')
@@ -151,9 +154,9 @@ export function move(gameState){
             console.log('--me--')
         }
     }
-
-    console.warn('---finding food---')
-    if (gameState.you.health <= 100){
+    console.log(`---am biggest? ${Biggest}---`)
+    if (gameState.you.health <= 50 || !Biggest){
+        console.warn('---finding food---')
         let closest = {x:0,y:0}
         let dist = 40
         let distx = 0
@@ -199,8 +202,10 @@ export function move(gameState){
                 console.log('Right is second')
             }
         }
+    }else{
+        
     }
-    if(gameState.you.health > 20){
+    if(gameState.you.health > 15){
         console.log('--flood--')
         let flofil = flood(gameState, occupied)
         console.log(flofil)
@@ -212,17 +217,17 @@ export function move(gameState){
         if (flofil[1] == 1){
             moves['down'] -= 100;
         }else{
-            moves['down'] += flofil[0]
+            moves['down'] += flofil[1]
         }
         if (flofil[2] == 1){
             moves['left'] -= 100;
         }else{
-            moves['left'] += flofil[0]
+            moves['left'] += flofil[2]
         }
         if (flofil[3] == 1){
             moves['right'] -= 100;
         }else{
-            moves['right'] += flofil[0]
+            moves['right'] += flofil[3]
         }
     }
 
