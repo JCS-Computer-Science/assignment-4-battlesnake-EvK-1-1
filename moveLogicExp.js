@@ -2,7 +2,6 @@ import flood from "./fill.js"
 
 export function gameCons(gamestate){
     this.gameId = gamestate.id
-    this.spin = true
 }
 
 export const games = {}
@@ -32,16 +31,20 @@ export function move(gameState){
     console.warn('---checking for edge---')
     if (Head.x == 0){
         moves['left'] = -999
+        moves['right'] += 1
         console.log('left')
     }else if (Head.x == RightEdge){
         moves['right'] = -999
+        moves['left'] += 1
         console.log('right')
     }
     if (Head.y == 0){
         moves['down'] = -999
+        moves['up'] += 1
         console.log('down')
     }else if (Head.y == TopEdge){
         moves['up'] = -999
+        moves['down'] += 1
         console.log('up')
     }
 
@@ -114,6 +117,22 @@ export function move(gameState){
                         }
                     // }
                 }else{
+                    if (enemy[0].y < TopEdge){
+                        occupied[enemy[0].x].push(enemy[0].y + 1)
+
+                    }
+                    if (enemy[0].y > 0){
+                        occupied[enemy[0].x].push(enemy[0].y - 1)
+
+                    }
+                    if (enemy[0].x < RightEdge){
+                        occupied[enemy[0].x + 1].push(enemy[0].y)
+
+                    }
+                    if (enemy[0].x > 0){
+                        occupied[enemy[0].x - 1].push(enemy[0].y)
+
+                    }
                     console.log('Retreating')
                     if (Math.abs(xdif) == 2){
                         moves['up'] += 5
@@ -154,8 +173,9 @@ export function move(gameState){
             console.log('--me--')
         }
     }
+
     console.log(`---am biggest? ${Biggest}---`)
-    if (gameState.you.health <= 50 || !Biggest){
+    if (gameState.you.health <= 50 || !Biggest || gameState.board.snakes.length == 1){
         console.warn('---finding food---')
         let closest = {x:0,y:0}
         let dist = 40
@@ -202,9 +222,61 @@ export function move(gameState){
                 console.log('Right is second')
             }
         }
-    }else{
-        
+    }else if (gameState.board.snakes.length > 1){
+        console.warn('---kill---')
+        let closest = null
+        let dist = 40
+        let distx = 0
+        let disty = 0
+        gameState.board.snakes.forEach(el => {
+            if(el.body[0].x != Head.x || el.body[0].y != Head.y){
+                if(Math.abs(Head.x - el.body[0].x) + Math.abs(Head.y - el.body[0].y) < dist){
+                    let diffx = el.body[0].x - el.body[1].x
+                    let diffy = el.body[0].y - el.body[1].y
+                    let target = {x:el.body[0].x + diffx, y:el.body[0].y + diffy}
+                    dist = Math.abs(Head.x - target.x) + Math.abs(Head.y - target.y)
+                    distx = Head.x - target.x
+                    disty = Head.y - target.y
+                    closest = target
+                    console.log(closest)
+                }
+            }
+        })
+        console.log(`found target ${closest.x} ${closest.y}`)
+        console.log(`dist ${distx} ${disty}`)
+        if (distx != 0 && Math.abs(distx) > Math.abs(disty) || disty == 0) {
+            if (distx > 0){
+                moves['left'] += 2
+                console.log('Left is best')
+            }else{
+                moves['right'] += 2
+                console.log('Right is best')
+            }
+            if (disty > 0){
+                moves['down'] += 1
+                console.log('Down is second')
+            }else if (disty < 0){
+                moves['up'] += 1
+                console.log('Up is second')
+            }
+        }else if (disty != 0 && Math.abs(distx) < Math.abs(disty) || distx == 0) {
+            if (disty > 0){
+                moves['down'] += 2
+                console.log('Down is best')
+            }else{
+                moves['up'] += 2
+                console.log('Up is best')
+            }
+            if (distx > 0){
+                moves['left'] += 1
+                console.log('Left is second')
+            }else if (distx < 0){
+                moves['right'] += 1
+                console.log('Right is second')
+            }
+        }
     }
+
     if(gameState.you.health > 15){
         console.log('--flood--')
         let flofil = flood(gameState, occupied)
@@ -230,7 +302,6 @@ export function move(gameState){
             moves['right'] += flofil[3]
         }
     }
-
 
     console.log('---calculating move---')
     console.log(moves)
