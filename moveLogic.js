@@ -91,6 +91,21 @@ export function move(gameState){
             console.log(`--${gameState.board.snakes[i].name}--`)
             if(enemy.length >= Body.length){
                 Biggest = false;
+                if (enemy[0].y < TopEdge){
+                    occupied[enemy[0].x].push(enemy[0].y + 1)
+                }
+                if (enemy[0].y > 0){
+                    occupied[enemy[0].x].push(enemy[0].y - 1)
+
+                }
+                if (enemy[0].x < RightEdge){
+                    occupied[enemy[0].x + 1].push(enemy[0].y)
+
+                }
+                if (enemy[0].x > 0){
+                    occupied[enemy[0].x - 1].push(enemy[0].y)
+
+                }
             }
             if (Math.abs(Head.x - enemy[0].x) + Math.abs(Head.y - enemy[0].y) == 2) {
                 console.log('-heads could collide-')
@@ -117,22 +132,6 @@ export function move(gameState){
                         }
                     // }
                 }else{
-                    if (enemy[0].y < TopEdge){
-                        occupied[enemy[0].x].push(enemy[0].y + 1)
-
-                    }
-                    if (enemy[0].y > 0){
-                        occupied[enemy[0].x].push(enemy[0].y - 1)
-
-                    }
-                    if (enemy[0].x < RightEdge){
-                        occupied[enemy[0].x + 1].push(enemy[0].y)
-
-                    }
-                    if (enemy[0].x > 0){
-                        occupied[enemy[0].x - 1].push(enemy[0].y)
-
-                    }
                     console.log('Retreating')
                     if (Math.abs(xdif) == 2){
                         moves['up'] += 5
