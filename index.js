@@ -10,7 +10,7 @@
 // To get you started we've included code to prevent your Battlesnake from moving backwards.
 // For more info see docs.battlesnake.com
 import express from "express";
-import {move, gameCons, games} from "./moveLogicExp.js";
+import {move, gameCons, games} from "./moveLogic.js";
 
 const app = express();
 app.use(express.json());
