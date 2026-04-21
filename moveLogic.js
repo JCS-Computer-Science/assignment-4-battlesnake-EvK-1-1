@@ -31,20 +31,34 @@ export function move(gameState){
     console.warn('---checking for edge---')
     if (Head.x == 0){
         moves['left'] = -999
-        moves['right'] += 3
+        moves['right'] += 2
         console.log('left')
     }else if (Head.x == RightEdge){
         moves['right'] = -999
-        moves['left'] += 3
+        moves['left'] += 2
         console.log('right')
     }
     if (Head.y == 0){
         moves['down'] = -999
-        moves['up'] += 3
+        moves['up'] += 2
         console.log('down')
     }else if (Head.y == TopEdge){
         moves['up'] = -999
-        moves['down'] += 3
+        moves['down'] += 2
+        console.log('up')
+    }
+    if (Head.x == 1){
+        moves['left'] = -2
+        console.log('left')
+    }else if (Head.x == RightEdge -1){
+        moves['right'] = -2
+        console.log('right')
+    }
+    if (Head.y == 1){
+        moves['down'] = -2
+        console.log('down')
+    }else if (Head.y == TopEdge -1){
+        moves['up'] = -2
         console.log('up')
     }
 
