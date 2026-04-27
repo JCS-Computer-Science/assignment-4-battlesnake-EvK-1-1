@@ -290,6 +290,25 @@ export function move(gameState){
         }
     }
 
+    if(gameState.board.hazards.length > 0){
+        gameState.board.hazards.forEach((haz) => {
+            if (haz.x == Head.x){
+                if (haz.y == Head.y - 1){
+                    moves['down'] -= 50
+                }else if (haz.y == Head.y + 1){
+                    moves ['up'] -= 50
+                }
+            }
+            if (haz.y == Head.y){
+                if (haz.x == Head.x - 1){
+                    moves['left'] -= 50
+                }else if (haz.x == Head.x + 1){
+                    moves ['right'] -= 50
+                }
+            }
+        })
+    }
+
     if(gameState.you.health > 15){
         console.log('--flood--')
         let flofil = flood(gameState, occupied)
