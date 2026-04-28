@@ -51,7 +51,7 @@ app.post('/end', (req, res) => {
 	res.status(200).send()
 })
 const host = "0.0.0.0";
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 
 app.listen(port, host, () => {
 	console.log(`Running Battlesnake at http://${host}:${port}...`);

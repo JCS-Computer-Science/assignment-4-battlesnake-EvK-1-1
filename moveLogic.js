@@ -294,16 +294,16 @@ export function move(gameState){
         gameState.board.hazards.forEach((haz) => {
             if (haz.x == Head.x){
                 if (haz.y == Head.y - 1){
-                    moves['down'] -= 50
+                    moves['down'] -= 10
                 }else if (haz.y == Head.y + 1){
-                    moves ['up'] -= 50
+                    moves ['up'] -= 10
                 }
             }
             if (haz.y == Head.y){
                 if (haz.x == Head.x - 1){
-                    moves['left'] -= 50
+                    moves['left'] -= 10
                 }else if (haz.x == Head.x + 1){
-                    moves ['right'] -= 50
+                    moves ['right'] -= 10
                 }
             }
         })
