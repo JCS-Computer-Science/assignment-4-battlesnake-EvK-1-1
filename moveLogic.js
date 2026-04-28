@@ -1,11 +1,5 @@
 import flood from "./fill.js"
 
-export function gameCons(gamestate){
-    this.gameId = gamestate.id
-}
-
-export const games = {}
-
 export function move(gameState){
     let moves = {
         'left' : 0,
@@ -187,6 +181,11 @@ export function move(gameState){
         }
     }
 
+
+    let foodMult = 1
+    if (gameState.you.health < 20) {
+        foodMult = 50
+    }
     console.log(`---am biggest? ${Biggest}---`)
     if (gameState.you.health <= 50 || !Biggest || gameState.board.snakes.length == 1){
         console.warn('---finding food---')
@@ -206,32 +205,32 @@ export function move(gameState){
         console.log(`found food ${closest.x} ${closest.y}`)
         if (distx != 0 && Math.abs(distx) < Math.abs(disty) || disty == 0) {
             if (distx > 0){
-                moves['left'] += 2
+                moves['left'] += 2 * foodMult
                 console.log('Left is best')
             }else{
-                moves['right'] += 2
+                moves['right'] += 2 * foodMult
                 console.log('Right is best')
             }
             if (disty > 0){
-                moves['down'] += 1
+                moves['down'] += 1 * foodMult
                 console.log('Down is second')
             }else if (disty < 0){
-                moves['up'] += 1
+                moves['up'] += 1 * foodMult
                 console.log('Up is second')
             }
         }else if (disty != 0 && Math.abs(distx) > Math.abs(disty) || distx == 0) {
             if (disty > 0){
-                moves['down'] += 2
+                moves['down'] += 2 * foodMult
                 console.log('Down is best')
             }else{
-                moves['up'] += 2
+                moves['up'] += 2 * foodMult
                 console.log('Up is best')
             }
             if (distx > 0){
-                moves['left'] += 1
+                moves['left'] += 1 * foodMult
                 console.log('Left is second')
             }else if (distx < 0){
-                moves['right'] += 1
+                moves['right'] += 1 * foodMult
                 console.log('Right is second')
             }
         }
@@ -294,16 +293,16 @@ export function move(gameState){
         gameState.board.hazards.forEach((haz) => {
             if (haz.x == Head.x){
                 if (haz.y == Head.y - 1){
-                    moves['down'] -= 10
+                    moves['down'] -= 20
                 }else if (haz.y == Head.y + 1){
-                    moves ['up'] -= 10
+                    moves ['up'] -= 20
                 }
             }
             if (haz.y == Head.y){
                 if (haz.x == Head.x - 1){
-                    moves['left'] -= 10
+                    moves['left'] -= 20
                 }else if (haz.x == Head.x + 1){
-                    moves ['right'] -= 10
+                    moves ['right'] -= 20
                 }
             }
         })

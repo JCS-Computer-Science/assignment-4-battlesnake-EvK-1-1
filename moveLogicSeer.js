@@ -37,10 +37,11 @@ export function move(gameState) {
     //around snake weighting
     gameState.board.snakes.forEach((snake) => {
         for (let i = 0; i < snake.body.length - 1; i++){
-            part = snake.body[i]
-            map[part.y][part.x] == 0
+            let part = snake.body[i]
+            map[part.y][part.x] = 0
             if (i == 0){
-                if (!part[i].x != HEAD.x || !part[i] != HEAD.y){
+                if (part.x != HEAD.x || part.y != HEAD.y){
+                    console.log('notme')
                     if (snake.body.length >= SELF.body.length){
                         if (part.y < TEDGE){
                             map[part.y + 1][part.x] -= 0.2
@@ -91,10 +92,81 @@ export function move(gameState) {
     let closest;
 
     if (witWegh.length > 1){
-
+        closest = witWegh[0]
+        witWegh.forEach((tile) => {
+            let cur = proximity(HEAD, closest);
+            let newt = proximity(HEAD, tile);
+            if (newt < cur){
+                closest = tile
+            }
+        })
     }else{
         closest = witWegh[0]
     }
 
-    return map; //only for testing
+    let opt = {
+        'up' : {x : HEAD.x, y : HEAD.y + 1},
+        'down' : {x : HEAD.x, y : HEAD.y - 1},
+        'left' : {x : HEAD.x - 1, y : HEAD.y},
+        'right' : {x : HEAD.x + 1, y : HEAD.y}
+    }
+    let xDist = HEAD.x - closest.x
+    let yDist = HEAD.y - closest.y
+    if (Math.abs(xDist) < Math.abs(yDist) && xDist != 0){
+        if (xDist > 0){
+            map[opt['left'].y][opt['left'].x] += 0.2
+        }else{
+            map[opt['right'].y][opt['right'].x] += 0.2
+        }
+        if (yDist > 0){
+            map[opt['down'].y][opt['down'].x] += 0.1
+        }else if (yDist < 0){
+            map[opt['up'].y][opt['up'].x] += 0.1
+        }
+    }else{
+        if (yDist > 0){
+            map[opt['down'].y][opt['down'].x] += 0.2
+        }else{
+            map[opt['up'].y][opt['up'].x] += 0.2
+        }
+        if (xDist > 0){
+            map[opt['left'].y][opt['left'].x] += 0.1
+        }else if (xDist < 0){
+            map[opt['right'].y][opt['right'].x] += 0.1
+        }
+    }
+    let dirs = ['up', 'down', 'left', 'right']
+    if (opt.up.y > TEDGE){
+        dirs.splice(0, 1)
+    }
+    if (opt.down.y < 0){
+        dirs.splice(1, 1)
+    }
+    if (opt.left.x < 0){
+        dirs.splice(2, 1)
+    }
+    if (opt.right.x > REDGE){
+        dirs.splice(3, 1)
+    }
+    let best = null;
+    dirs.forEach((dir) => {
+        if (best == null){
+            best = dir
+        }else{
+            console.log(best)
+            console.log(map[opt[best].y][opt[best].x])
+            if (map[opt[best].y][opt[best].x] < map[opt[dir].y][opt[dir].x]){
+                best = dir
+            }
+        }
+    })
+
+    return {move : best};
+    // return map; //only for testing
+}
+
+function proximity(a, b){
+    let xPr = Math.abs(a.x - b.x)
+    let yPr = Math.abs(a.y - b.y)
+    return xPr + yPr
 }

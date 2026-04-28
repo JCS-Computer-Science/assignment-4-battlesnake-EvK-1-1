@@ -1,4 +1,4 @@
-export default function flood(gameState, occupied) {
+export default function flood(gameState, occupied, returnMap = false) {
     let wid = gameState.board.width - 1;
     let high = gameState.board.height - 1;
     let Head = gameState.you.body[0]

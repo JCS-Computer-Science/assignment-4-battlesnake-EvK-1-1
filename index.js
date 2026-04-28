@@ -10,7 +10,7 @@
 // To get you started we've included code to prevent your Battlesnake from moving backwards.
 // For more info see docs.battlesnake.com
 import express from "express";
-import {move, gameCons, games} from "./moveLogic.js";
+import {move} from "./moveLogic.js";
 
 const app = express();
 app.use(express.json());
@@ -31,8 +31,6 @@ app.get('/', (req, res) => {
 //      the request body will contain objects representing the game instance, game board state, and your snake
 //      https://docs.battlesnake.com/api/requests/start
 app.post('/start', (req, res) => {
-	let newGame = new gameCons(req.body.game)
-	games[req.body.you.id] = newGame
 	res.status(200).send()
 })
 //TODO: respond to POST requests on "/move". Your response should be an object with a "move" property and optionally
@@ -45,7 +43,6 @@ app.post('/move', (req, res) => {
 //      but must have status code "200" the request body will contain objects representing the game
 //      https://docs.battlesnake.com/api/requests/end
 app.post('/end', (req, res) => {
-	games[req.body.you.id] = undefined
 	console.log(req.body.game.id)
 	console.log(new Date())
 	res.status(200).send()
