@@ -3,7 +3,7 @@ export function move(gameState) {
     const TEDGE = gameState.board.height - 1;
     const SELF = gameState.you
     const HEAD = SELF.body[0]
-
+    console.log(`---turn ${gameState.turn}---`)
     //make blank map of board
     let map = []
     for(let i = 0; i <= TEDGE; i++){
@@ -104,6 +104,9 @@ export function move(gameState) {
         closest = witWegh[0]
     }
 
+    console.log(`at ${HEAD.x},${HEAD.y}`)
+    console.log(`going towards ${closest.x},${closest.y}`)
+
     let opt = {
         'up' : {x : HEAD.x, y : HEAD.y + 1},
         'down' : {x : HEAD.x, y : HEAD.y - 1},
@@ -112,27 +115,51 @@ export function move(gameState) {
     }
     let xDist = HEAD.x - closest.x
     let yDist = HEAD.y - closest.y
-    if (Math.abs(xDist) < Math.abs(yDist) && xDist != 0){
+    if (Math.abs(xDist) < Math.abs(yDist) && xDist != 0 || yDist == 0){
         if (xDist > 0){
-            map[opt['left'].y][opt['left'].x] += 0.2
+            if (map[opt['left'].y][opt['left'].x] > 0){
+                console.log('left is best')
+                map[opt['left'].y][opt['left'].x] += 0.2
+            }
         }else{
-            map[opt['right'].y][opt['right'].x] += 0.2
+            if (map[opt['right'].y][opt['right'].x] > 0){
+                console.log('right is best')
+                map[opt['right'].y][opt['right'].x] += 0.2
+            }
         }
         if (yDist > 0){
-            map[opt['down'].y][opt['down'].x] += 0.1
+            if (map[opt['down'].y][opt['down'].x] > 0){
+                console.log('down is okay')
+                map[opt['down'].y][opt['down'].x] += 0.1
+            }
         }else if (yDist < 0){
-            map[opt['up'].y][opt['up'].x] += 0.1
+            if (map[opt['up'].y][opt['up'].x] > 0){
+                console.log('up is okay')
+                map[opt['up'].y][opt['up'].x] += 0.1
+            }
         }
     }else{
         if (yDist > 0){
-            map[opt['down'].y][opt['down'].x] += 0.2
+            if (map[opt['down'].y][opt['down'].x] > 0){
+                console.log('down is best')
+                map[opt['down'].y][opt['down'].x] += 0.2
+            }
         }else{
-            map[opt['up'].y][opt['up'].x] += 0.2
+            if (map[opt['up'].y][opt['up'].x] > 0){
+                console.log('up is best')
+                map[opt['up'].y][opt['up'].x] += 0.2
+            }
         }
         if (xDist > 0){
-            map[opt['left'].y][opt['left'].x] += 0.1
+            if (map[opt['left'].y][opt['left'].x] > 0){
+                console.log('left is okay')
+                map[opt['left'].y][opt['left'].x] += 0.1
+            }
         }else if (xDist < 0){
-            map[opt['right'].y][opt['right'].x] += 0.1
+            if (map[opt['right'].y][opt['right'].x] > 0){
+                console.log('right is okay')
+                map[opt['right'].y][opt['right'].x] += 0.1
+            }
         }
     }
     let dirs = ['up', 'down', 'left', 'right']
@@ -153,14 +180,28 @@ export function move(gameState) {
         if (best == null){
             best = dir
         }else{
-            console.log(best)
-            console.log(map[opt[best].y][opt[best].x])
+            // console.log(best)
+            // console.log(map[opt[best].y][opt[best].x])
             if (map[opt[best].y][opt[best].x] < map[opt[dir].y][opt[dir].x]){
                 best = dir
             }
         }
     })
 
+    //terminal board display
+    // for (let i = 10; i >= 0; i--){
+    //     let row = map[i]
+    //     let rowtxt = ``
+    //     for (let j = 0; j < 11; j++){
+    //         if (row[j] == 0){
+    //             rowtxt += `\x1b[32m`
+    //         }else if(row[j] > 1){
+    //             rowtxt += `\x1b[34m`
+    //         }
+    //         rowtxt += `${row[j]}\x1b[0m `
+    //     }
+    //     console.log(rowtxt)
+    // }
     return {move : best};
     // return map; //only for testing
 }

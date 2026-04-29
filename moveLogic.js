@@ -121,13 +121,6 @@ export function move(gameState){
                 let ydif = Head.y - enemy[0].y
                 if(Body.length > enemy.length){
                     console.log('attacking')
-                    // if (Math.abs(xdif) == 2){
-                    //     moves['up'] -= 5
-                    //     moves['down'] -= 5
-                    // }else if (Math.abs(ydif) == 2){
-                    //     moves['left'] -= 5
-                    //     moves['right'] -= 5
-                    // }else{
                         if (xdif > 0){
                             moves['left'] += 5
                         }else{
@@ -138,7 +131,6 @@ export function move(gameState){
                         }else{
                             moves['up'] += 5
                         }
-                    // }
                 }else{
                     console.log('Retreating')
                     if (Math.abs(xdif) == 2){
