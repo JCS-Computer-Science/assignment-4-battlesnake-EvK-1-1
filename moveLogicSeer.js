@@ -31,7 +31,7 @@ export function move(gameState) {
 
     //food weighting
     gameState.board.food.forEach((food) => {
-        map[food.y][food.x] += 0.1
+        map[food.y][food.x] += 0.25
     })
 
     //around snake weighting
