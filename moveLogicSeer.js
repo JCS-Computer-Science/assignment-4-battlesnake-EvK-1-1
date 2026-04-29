@@ -16,17 +16,17 @@ export function move(gameState) {
 
     //make edges not safe
     for(let i = 0; i <= REDGE; i++){
-        map[0][i] -= 0.25;
-        map[TEDGE][i] -= 0.25;
+        map[0][i] -= 0.2;
+        map[TEDGE][i] -= 0.2;
     }
     for(let i = 0; i <= TEDGE; i++){
-        map[i][0] -= 0.25
-        map[i][REDGE] -= 0.25
+        map[i][0] -= 0.2
+        map[i][REDGE] -= 0.2
     }
 
     //hazard weighting
     gameState.board.hazards.forEach((haz) => {
-        map[haz.y][haz.x] -= 0.25
+        map[haz.y][haz.x] -= 0.2
     })
 
     //food weighting
@@ -44,29 +44,29 @@ export function move(gameState) {
                     console.log('notme')
                     if (snake.body.length >= SELF.body.length){
                         if (part.y < TEDGE){
-                            map[part.y + 1][part.x] -= 0.2
+                            map[part.y + 1][part.x] -= 0.3
                         }
                         if (part.y > 0){
-                            map[part.y - 1][part.x] -= 0.2
+                            map[part.y - 1][part.x] -= 0.3
                         }
                         if (part.x < REDGE){
-                            map[part.y][part.x + 1] -= 0.2
+                            map[part.y][part.x + 1] -= 0.3
                         }
                         if (part.x > 0){
-                            map[part.y][part.x - 1] -= 0.2
+                            map[part.y][part.x - 1] -= 0.3
                         }
                     }else{
                         if (part.y < TEDGE){
-                            map[part.y + 1][part.x] += 0.2
+                            map[part.y + 1][part.x] += 0.3
                         }
                         if (part.y > 0){
-                            map[part.y - 1][part.x] += 0.2
+                            map[part.y - 1][part.x] += 0.3
                         }
                         if (part.x < REDGE){
-                            map[part.y][part.x + 1] += 0.2
+                            map[part.y][part.x + 1] += 0.3
                         }
                         if (part.x > 0){
-                            map[part.y][part.x - 1] += 0.2
+                            map[part.y][part.x - 1] += 0.3
                         }
                     }
                 }
@@ -119,46 +119,46 @@ export function move(gameState) {
         if (xDist > 0){
             if (map[opt['left'].y][opt['left'].x] > 0){
                 console.log('left is best')
-                map[opt['left'].y][opt['left'].x] += 0.2
+                map[opt['left'].y][opt['left'].x] += 0.1
             }
         }else{
             if (map[opt['right'].y][opt['right'].x] > 0){
                 console.log('right is best')
-                map[opt['right'].y][opt['right'].x] += 0.2
+                map[opt['right'].y][opt['right'].x] += 0.1
             }
         }
         if (yDist > 0){
             if (map[opt['down'].y][opt['down'].x] > 0){
                 console.log('down is okay')
-                map[opt['down'].y][opt['down'].x] += 0.1
+                map[opt['down'].y][opt['down'].x] += 0.05
             }
         }else if (yDist < 0){
             if (map[opt['up'].y][opt['up'].x] > 0){
                 console.log('up is okay')
-                map[opt['up'].y][opt['up'].x] += 0.1
+                map[opt['up'].y][opt['up'].x] += 0.05
             }
         }
     }else{
         if (yDist > 0){
             if (map[opt['down'].y][opt['down'].x] > 0){
                 console.log('down is best')
-                map[opt['down'].y][opt['down'].x] += 0.2
+                map[opt['down'].y][opt['down'].x] += 0.1
             }
         }else{
             if (map[opt['up'].y][opt['up'].x] > 0){
                 console.log('up is best')
-                map[opt['up'].y][opt['up'].x] += 0.2
+                map[opt['up'].y][opt['up'].x] += 0.1
             }
         }
         if (xDist > 0){
             if (map[opt['left'].y][opt['left'].x] > 0){
                 console.log('left is okay')
-                map[opt['left'].y][opt['left'].x] += 0.1
+                map[opt['left'].y][opt['left'].x] += 0.05
             }
         }else if (xDist < 0){
             if (map[opt['right'].y][opt['right'].x] > 0){
                 console.log('right is okay')
-                map[opt['right'].y][opt['right'].x] += 0.1
+                map[opt['right'].y][opt['right'].x] += 0.05
             }
         }
     }

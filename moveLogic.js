@@ -7,7 +7,7 @@ export function move(gameState){
         'up' : 0,
         'down' : 0
     }
-    let game = games[gameState.you.id]
+
     let occupied = {}
     
     const Body = gameState.you.body
