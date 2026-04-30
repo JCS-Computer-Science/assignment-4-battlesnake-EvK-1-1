@@ -1,3 +1,5 @@
+import flood from "./fill.js";
+
 export function move(gameState) {
     const REDGE = gameState.board.width - 1;
     const TEDGE = gameState.board.height - 1;
@@ -14,6 +16,11 @@ export function move(gameState) {
         map.push(row);
     }
 
+    let occupied = {}
+    for (let i = 0; i <= REDGE; i++){
+        occupied[i] = [];
+    }
+
     //make edges not safe
     for(let i = 0; i <= REDGE; i++){
         map[0][i] -= 0.2;
@@ -26,7 +33,7 @@ export function move(gameState) {
 
     //hazard weighting
     gameState.board.hazards.forEach((haz) => {
-        map[haz.y][haz.x] -= 0.2
+        map[haz.y][haz.x] -= 0.25
     })
 
     //food weighting
@@ -39,21 +46,27 @@ export function move(gameState) {
         for (let i = 0; i < snake.body.length - 1; i++){
             let part = snake.body[i]
             map[part.y][part.x] = 0
+            let me = true
             if (i == 0){
                 if (part.x != HEAD.x || part.y != HEAD.y){
                     console.log('notme')
+                    me = false
                     if (snake.body.length >= SELF.body.length){
                         if (part.y < TEDGE){
                             map[part.y + 1][part.x] -= 0.3
+                            occupied[part.x].push(part.y + 1)
                         }
                         if (part.y > 0){
                             map[part.y - 1][part.x] -= 0.3
+                            occupied[part.x].push(part.y - 1)
                         }
                         if (part.x < REDGE){
                             map[part.y][part.x + 1] -= 0.3
+                            occupied[part.x + 1].push(part.y)
                         }
                         if (part.x > 0){
                             map[part.y][part.x - 1] -= 0.3
+                            occupied[part.x - 1].push(part.y)
                         }
                     }else{
                         if (part.y < TEDGE){
@@ -70,6 +83,9 @@ export function move(gameState) {
                         }
                     }
                 }
+            }
+            if (!me || i != snake.body.length - 2){
+                occupied[part.x].push(part.y)
             }
         }
     })
@@ -162,26 +178,51 @@ export function move(gameState) {
             }
         }
     }
+
     let dirs = ['up', 'down', 'left', 'right']
     if (opt.up.y > TEDGE){
-        dirs.splice(0, 1)
+        let ind = dirs.indexOf('up')
+        dirs.splice(ind, 1)
     }
     if (opt.down.y < 0){
-        dirs.splice(1, 1)
+        let ind = dirs.indexOf('down')
+        dirs.splice(ind, 1)
     }
     if (opt.left.x < 0){
-        dirs.splice(2, 1)
+        let ind = dirs.indexOf('left')
+        dirs.splice(ind, 1)
     }
     if (opt.right.x > REDGE){
-        dirs.splice(3, 1)
+        let ind = dirs.indexOf('right')
+        dirs.splice(ind, 1)
     }
+
+    let fill = flood(gameState, occupied)
+    console.log(`fill :`)
+    console.log(fill)
+
+    dirs.forEach((dir) => {
+        let ind
+        if (dir == 'up'){
+            ind = 0
+        }else if (dir == 'down'){
+            ind = 1
+        }else if (dir == 'left'){
+            ind = 2
+        }else if (dir == 'right'){
+            ind = 3
+        }
+        map[opt[dir].y][opt[dir].x] += fill[ind]
+        console.log(`${dir} ${map[opt[dir].y][opt[dir].x]}`)
+    })
+    
+    
+
     let best = null;
     dirs.forEach((dir) => {
         if (best == null){
             best = dir
         }else{
-            // console.log(best)
-            // console.log(map[opt[best].y][opt[best].x])
             if (map[opt[best].y][opt[best].x] < map[opt[dir].y][opt[dir].x]){
                 best = dir
             }
@@ -202,6 +243,12 @@ export function move(gameState) {
     //     }
     //     console.log(rowtxt)
     // }
+    console.log(best)
+    console.log(map[opt[best].y][opt[best].x])
+    console.log('---------------')
+    dirs.forEach((dir) => {
+        console.log(map[opt[dir].y][opt[dir].x])
+    })
     return {move : best};
     // return map; //only for testing
 }
