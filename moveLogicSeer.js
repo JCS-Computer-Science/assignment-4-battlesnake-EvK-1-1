@@ -46,6 +46,7 @@ export function move(gameState) {
         for (let i = 0; i < snake.body.length - 1; i++){
             let part = snake.body[i]
             map[part.y][part.x] = 0
+            occupied[part.x].push(part.y)
             let me = true
             if (i == 0){
                 if (part.x != HEAD.x || part.y != HEAD.y){
@@ -83,10 +84,7 @@ export function move(gameState) {
                         }
                     }
                 }
-            }
-            if (!me || i != snake.body.length - 2){
-                occupied[part.x].push(part.y)
-            }
+            } 
         }
     })
 
