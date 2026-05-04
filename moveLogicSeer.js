@@ -56,21 +56,22 @@ export function move(gameState) {
             occupied[part.x].push(part.y)
             let me = true
             if (i == 0){
+                let xDif = HEAD.x - snake.body[0].x
+                let yDif = HEAD.y - snake.body[0].y
+                let diff = Math.abs(xDif) + Math.abs(yDif)
                 if (part.x != HEAD.x || part.y != HEAD.y){
                     console.log('notme')
                     me = false
                     if (snake.body.length >= SELF.body.length){
-                        let xDif = HEAD.x - snake.body[0].x
-                        let yDif = HEAD.y - snake.body[0].y
-                        if (xDif > 0 && xDif < 2){
+                        if (xDif > 0 && xDif < 3){
                             scaries['left'].push(snake.body.length)
-                        }else if (xDif < 0 && xDif > -2){
+                        }else if (xDif < 0 && xDif > -3){
                             scaries['right'].push(snake.body.length)
                         }
 
-                        if (yDif > 0 && yDif < 2){
+                        if (yDif > 0 && yDif < 3){
                             scaries['down'].push(snake.body.length)
-                        }else if (yDif < 0 && yDif > -2){
+                        }else if (yDif < 0 && yDif > -3){
                             scaries['up'].push(snake.body.length)
                         }
 
@@ -93,19 +94,27 @@ export function move(gameState) {
                     }else{
                         if (part.y < TEDGE){
                             map[part.y + 1][part.x] += 0.3
-                            occupied[part.x].push(part.y + 1)
+                            if (diff > 2){
+                                occupied[part.x].push(part.y + 1)
+                            }
                         }
                         if (part.y > 0){
                             map[part.y - 1][part.x] += 0.3
-                            occupied[part.x].push(part.y - 1)
+                            if (diff > 2){
+                                occupied[part.x].push(part.y - 1)
+                            }
                         }
                         if (part.x < REDGE){
                             map[part.y][part.x + 1] += 0.3
-                            occupied[part.x + 1].push(part.y)
+                            if (diff > 2){
+                                occupied[part.x + 1].push(part.y)
+                            }
                         }
                         if (part.x > 0){
                             map[part.y][part.x - 1] += 0.3
-                            occupied[part.x - 1].push(part.y)
+                            if (diff > 2){
+                                occupied[part.x - 1].push(part.y)
+                            }
                         }
                     }
                 }
