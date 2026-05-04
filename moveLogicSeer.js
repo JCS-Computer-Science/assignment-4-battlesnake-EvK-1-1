@@ -63,15 +63,15 @@ export function move(gameState) {
                     console.log('notme')
                     me = false
                     if (snake.body.length >= SELF.body.length){
-                        if (xDif > 0 && xDif < 3){
+                        if (xDif > 0 && xDif < 2){
                             scaries['left'].push(snake.body.length)
-                        }else if (xDif < 0 && xDif > -3){
+                        }else if (xDif < 0 && xDif > -2){
                             scaries['right'].push(snake.body.length)
                         }
 
-                        if (yDif > 0 && yDif < 3){
+                        if (yDif > 0 && yDif < 2){
                             scaries['down'].push(snake.body.length)
-                        }else if (yDif < 0 && yDif > -3){
+                        }else if (yDif < 0 && yDif > -2){
                             scaries['up'].push(snake.body.length)
                         }
 
