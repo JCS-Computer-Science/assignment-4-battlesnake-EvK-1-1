@@ -41,6 +41,13 @@ export function move(gameState) {
         map[food.y][food.x] += 0.25
     })
 
+    let scaries = {
+        'up' : [],
+        'down' : [],
+        'left' : [],
+        'right' : []
+    }
+
     //around snake weighting
     gameState.board.snakes.forEach((snake) => {
         for (let i = 0; i < snake.body.length - 1; i++){
@@ -53,6 +60,20 @@ export function move(gameState) {
                     console.log('notme')
                     me = false
                     if (snake.body.length >= SELF.body.length){
+                        let xDif = HEAD.x - snake.body[0].x
+                        let yDif = HEAD.y - snake.body[0].y
+                        if (xDif > 0 && xDif < 2){
+                            scaries['left'].push(snake.body.length)
+                        }else if (xDif < 0 && xDif > -2){
+                            scaries['right'].push(snake.body.length)
+                        }
+
+                        if (yDif > 0 && yDif < 2){
+                            scaries['down'].push(snake.body.length)
+                        }else if (yDif < 0 && yDif > -2){
+                            scaries['up'].push(snake.body.length)
+                        }
+
                         if (part.y < TEDGE){
                             map[part.y + 1][part.x] -= 0.3
                             occupied[part.x].push(part.y + 1)
@@ -72,15 +93,19 @@ export function move(gameState) {
                     }else{
                         if (part.y < TEDGE){
                             map[part.y + 1][part.x] += 0.3
+                            occupied[part.x].push(part.y + 1)
                         }
                         if (part.y > 0){
                             map[part.y - 1][part.x] += 0.3
+                            occupied[part.x].push(part.y - 1)
                         }
                         if (part.x < REDGE){
                             map[part.y][part.x + 1] += 0.3
+                            occupied[part.x + 1].push(part.y)
                         }
                         if (part.x > 0){
                             map[part.y][part.x - 1] += 0.3
+                            occupied[part.x - 1].push(part.y)
                         }
                     }
                 }
@@ -209,6 +234,9 @@ export function move(gameState) {
             ind = 2
         }else if (dir == 'right'){
             ind = 3
+        }
+        if (scaries[dir].length > 0){
+            map[opt[dir].y][opt[dir].x] -= 0.5
         }
         map[opt[dir].y][opt[dir].x] += fill[ind]
         console.log(`${dir} ${map[opt[dir].y][opt[dir].x]}`)
